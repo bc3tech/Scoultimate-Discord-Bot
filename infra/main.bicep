@@ -44,6 +44,4 @@ module resources 'resources.bicep' = {
   }
 }
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
-output AZURE_KEY_VAULT_ENDPOINT string = resources.outputs.AZURE_KEY_VAULT_ENDPOINT
-output AZURE_KEY_VAULT_NAME string = resources.outputs.AZURE_KEY_VAULT_NAME
 output AZURE_RESOURCE_SCOULTIMATE_DISCORD_BOT_ID string = resources.outputs.AZURE_RESOURCE_SCOULTIMATE_DISCORD_BOT_ID

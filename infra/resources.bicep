@@ -143,33 +143,6 @@ module scoultimateDiscordBot 'br/public:avm/res/app/container-app:0.8.0' = {
     tags: union(tags, { 'azd-service-name': 'scoultimate-discord-bot' })
   }
 }
-// Create a keyvault to store secrets
-module keyVault 'br/public:avm/res/key-vault/vault:0.6.1' = {
-  name: 'keyvault'
-  params: {
-    name: '${abbrs.keyVaultVaults}${resourceToken}'
-    location: location
-    tags: tags
-    enableRbacAuthorization: false
-    accessPolicies: [
-      {
-        objectId: principalId
-        permissions: {
-          secrets: [ 'get', 'list' ]
-        }
-      }
-      {
-        objectId: scoultimateDiscordBotIdentity.outputs.principalId
-        permissions: {
-          secrets: [ 'get', 'list' ]
-        }
-      }
-    ]
-    secrets: [
-    ]
-  }
-}
+
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.outputs.loginServer
-output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.uri
-output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name
 output AZURE_RESOURCE_SCOULTIMATE_DISCORD_BOT_ID string = scoultimateDiscordBot.outputs.resourceId
