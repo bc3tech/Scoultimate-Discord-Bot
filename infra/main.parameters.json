@@ -72,8 +72,8 @@
           ]
         }
       },
-      "principalId": {
-        "value": "${AZURE_PRINCIPAL_ID}"
+      "port": {
+        "value": "2046"
       }
     }
 }

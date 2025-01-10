@@ -13,8 +13,7 @@ param scoultimateDiscordBotExists bool
 @secure()
 param scoultimateDiscordBotDefinition object
 
-@description('Id of the user or app to assign application roles')
-param principalId string
+param port int = 2046
 
 // Tags that should be applied to all resources.
 // 
@@ -38,9 +37,9 @@ module resources 'resources.bicep' = {
   params: {
     location: location
     tags: tags
-    principalId: principalId
     scoultimateDiscordBotExists: scoultimateDiscordBotExists
     scoultimateDiscordBotDefinition: scoultimateDiscordBotDefinition
+    port: port
   }
 }
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
