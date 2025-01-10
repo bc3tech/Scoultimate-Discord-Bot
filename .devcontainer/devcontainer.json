@@ -2,7 +2,8 @@
     "name": "Scoultimate Discord Bot",
     "image": "mcr.microsoft.com/devcontainers/typescript-node",
     "features": {
-        "ghcr.io/azure/azure-dev/azd:latest": {}
+        "ghcr.io/azure/azure-dev/azd": {},
+        "ghcr.io/devcontainers/features/docker-in-docker": {}
     },
     "customizations": {
         "vscode": {

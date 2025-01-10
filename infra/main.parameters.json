@@ -13,6 +13,63 @@
       },
       "scoultimateDiscordBotDefinition": {
         "value": {
+          "settings": [
+            {
+              "name": "BOT_TOKEN",
+              "value": "${BOT_TOKEN}",
+              "secret": true
+            },
+            {
+              "name": "CLIENT_ID",
+              "value": "${CLIENT_ID}",
+              "secret": true
+            },
+            {
+              "name": "GUILD_ID",
+              "value": "${GUILD_ID}",
+              "secret": true
+            },
+            {
+              "name": "TBA_KEY",
+              "value": "${TBA_KEY}",
+              "secret": true
+            },
+            {
+              "name": "ENVIRONMENT",
+              "value": "PRODUCTION",
+              "secret": false
+            },
+            {
+              "name": "BOT_LOGO_URL",
+              "value": "https://firebasestorage.googleapis.com/v0/b/frc-scouting-epicnd.appspot.com/o/scoultimate-logo.png?alt=media&token=e57ad6be-e082-4bcc-8d01-19a634883293",
+              "secret": false
+            },
+            {
+              "name": "CLEAR",
+              "value": "1",
+              "secret": false
+            },
+            {
+              "name": "TBA_BASE_API_URL",
+              "value": "https://www.thebluealliance.com/api/v3",
+              "secret": false
+            },
+            {
+              "name": "STATBOTICS_BASE_API_URL",
+              "value": "https://api.statbotics.io/v2",
+              "secret": false
+            },
+            {
+              "name": "TBA_BASE_URL",
+              "value": "https://www.thebluealliance.com",
+              "secret": false
+            },
+            {
+              "name": "BOT_VERSION",
+              "value": "${BOT_VERSION}",
+              "secret": false
+            }
+          ]
         }
       },
       "principalId": {
