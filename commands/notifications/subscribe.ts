@@ -103,7 +103,7 @@ const ping: SlashCommand = {
           embeds: [
             generateErrorEmbed({
               error:
-                "Invalid event key. Make sure the event you provided exists.",
+                "Invalid team number. Make sure the team you provided exists.",
               command: "/subscribe",
             }),
           ],
