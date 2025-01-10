@@ -8,7 +8,6 @@ param tags object = {}
 param scoultimateDiscordBotExists bool
 @secure()
 param scoultimateDiscordBotDefinition object
-param port int
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = uniqueString(subscription().id, resourceGroup().id, location)
@@ -86,7 +85,7 @@ module scoultimateDiscordBot 'br/public:avm/res/app/container-app:0.8.0' = {
   name: 'scoultimateDiscordBot'
   params: {
     name: 'scoultimate-discord-bot'
-    ingressTargetPort: port
+    ingressAllowInsecure: false
     scaleMinReplicas: 1
     scaleMaxReplicas: 10
     secrets: {
@@ -113,10 +112,6 @@ module scoultimateDiscordBot 'br/public:avm/res/app/container-app:0.8.0' = {
           {
             name: 'AZURE_CLIENT_ID'
             value: scoultimateDiscordBotIdentity.outputs.clientId
-          }
-          {
-            name: 'PORT'
-            value: port
           }
         ],
         scoultimateDiscordBotEnv,

@@ -13,8 +13,6 @@ param scoultimateDiscordBotExists bool
 @secure()
 param scoultimateDiscordBotDefinition object
 
-param port int = 2046
-
 // Tags that should be applied to all resources.
 // 
 // Note that 'azd-service-name' tags should be applied separately to service host resources.
@@ -39,7 +37,6 @@ module resources 'resources.bicep' = {
     tags: tags
     scoultimateDiscordBotExists: scoultimateDiscordBotExists
     scoultimateDiscordBotDefinition: scoultimateDiscordBotDefinition
-    port: port
   }
 }
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
