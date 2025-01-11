@@ -174,6 +174,8 @@ module storageAccountMod 'br/public:avm/res/storage/storage-account:0.15.0' = {
         ) // Storage Table Data Contributor
       }
     ]
+
+    publicNetworkAccess: 'Enabled'
   }
 }
 
