@@ -117,6 +117,10 @@ module scoultimateDiscordBot 'br/public:avm/res/app/container-app:0.8.0' = {
               name: 'AZURE_CLIENT_ID'
               value: scoultimateDiscordBotIdentity.outputs.clientId
             }
+            {
+              name: 'AZURE_STORAGE_ACCOUNT_NAME'
+              value: storageAccountMod.outputs.name
+            }
           ],
           scoultimateDiscordBotEnv,
           map(scoultimateDiscordBotSecrets, secret => {
