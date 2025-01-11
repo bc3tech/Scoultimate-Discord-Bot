@@ -1,16 +1,13 @@
 import { DatabaseGuild } from "../../models/DatabaseModels/Notitfications/GuildModel";
-import { db } from "../firebase";
+import db from "../azuretables";
 
 export async function getSubscriptions(
   id: string
 ): Promise<DatabaseGuild | undefined> {
-  const guildRef = db
-    .collection("bot")
-    .doc("notifications")
+  const data = await db
     .collection("guilds")
-    .doc(id);
-
-  const data = (await guildRef.get()).data() as DatabaseGuild;
+    .doc<DatabaseGuild>(id)
+    .get();
 
   if (!data) {
     return undefined;

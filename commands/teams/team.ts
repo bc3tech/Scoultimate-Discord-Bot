@@ -77,7 +77,8 @@ async function retrieveEmbed(team: number | string): Promise<EmbedBuilder> {
     get<APITeamAward[]>(`team/frc${team}/awards`),
     get<APITeamEvent[]>(`team/frc${team}/events/${maxYear}`),
     get<APITeamStatbotics>(`team_year/${team}/${maxYear}`, "Statbotics").catch(
-      () => ({ epa_end: "NA", total_epa_rank: "Unranked" })
+      () => get<APITeamStatbotics>(`team_year/${team}/${maxYear - 1}`, "Statbotics")
+        .catch(() => ({ epa_end: "NA", total_epa_rank: "Unranked" }))
     ),
   ]);
 
@@ -91,7 +92,7 @@ async function retrieveEmbed(team: number | string): Promise<EmbedBuilder> {
     country,
     city,
     state_prov,
-    logo_url: `${constants.cloudinary_bucket_url}/${team}.png`,
+    logo_url: `https://www.thebluealliance.com/avatar/${maxYear}/frc${team}.png`,
     profiles: socialMedia.map((value) => {
       return getSocialMediaProfile(value);
     }),

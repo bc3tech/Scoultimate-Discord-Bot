@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run npm start",
+            "runtimeExecutable": "npm",
+            "args": [
+                "run",
+                "start"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/build/**/*.js"
+            ],
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

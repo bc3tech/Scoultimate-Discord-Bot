@@ -1,10 +1,11 @@
 import { DatabaseEvent } from "../../models/DatabaseModels/Notitfications/EventModel";
-import { DatabaseGuild } from "../../models/DatabaseModels/Notitfications/GuildModel";
 import { DatabaseTeam } from "../../models/DatabaseModels/Notitfications/TeamModel";
+import { DatabaseGuild } from "../../models/DatabaseModels/Notitfications/GuildModel";
+import { Event } from "../../models/EmbedModels/TeamEmbedModel";
 import { WebhookTypes } from "../../models/WebhookModels/GeneralWebhookModel";
 import { TBAMatchScoreNotification } from "../../models/WebhookModels/TBAMatchScoreNotificationModel";
 import { TBAUpcomingMatchNotification } from "../../models/WebhookModels/TBAUpcomingMatchNotificationModel";
-import { db } from "../firebase";
+import db from "../azuretables";
 
 export async function getChannelsForNotifications(
   data: TBAUpcomingMatchNotification | TBAMatchScoreNotification,
@@ -25,12 +26,12 @@ export async function getChannelsForNotifications(
     data.message_type == WebhookTypes.UPCOMING_MATCH
       ? (data as TBAUpcomingMatchNotification).message_data.team_keys
       : [
-          ...((data as TBAMatchScoreNotification).message_data.match.alliances
-            ?.blue.team_keys || []),
+        ...((data as TBAMatchScoreNotification).message_data.match.alliances
+          ?.blue.team_keys || []),
 
-          ...((data as TBAMatchScoreNotification).message_data.match.alliances
-            ?.red.team_keys || []),
-        ];
+        ...((data as TBAMatchScoreNotification).message_data.match.alliances
+          ?.red.team_keys || []),
+      ];
 
   for (let i = 0; i < team_keys.length; i++) {
     (
@@ -46,13 +47,10 @@ export async function getChannelsForNotifications(
 async function getChannelsForNotificationsFromEventKey(
   key: string
 ): Promise<string[]> {
-  const eventRef = db
-    .collection("bot")
-    .doc("notifications")
+  const data = await db
     .collection("events")
-    .doc(key);
-
-  const data = (await eventRef.get()).data() as DatabaseEvent;
+    .doc<DatabaseEvent>(key)
+    .get();
 
   // No followers of the event in the database
   if (!data) {
@@ -65,7 +63,7 @@ async function getChannelsForNotificationsFromEventKey(
   const channels: string[] = [];
 
   for (let i = 0; i < newRefs.length; i++) {
-    const guildData = (await newRefs[i].get()).data() as DatabaseGuild;
+    const guildData = await db.collection("guilds").doc<DatabaseGuild>(newRefs[i]).get();
 
     // if there for some reason is an issue with the database storage, we'll just continue to the next object
     if (!guildData) {
@@ -82,13 +80,11 @@ async function getChannelsForNotificationsFromEventKey(
 async function getChannelsForNotificationsFromTeamNumber(
   team: string
 ): Promise<string[]> {
-  const teamRef = db
-    .collection("bot")
-    .doc("notifications")
+  const data = await db
     .collection("teams")
-    .doc(team);
+    .doc<DatabaseTeam>(team)
+    .get();
 
-  const data = (await teamRef.get()).data() as DatabaseTeam;
   // No followers of the event in the database
   if (!data) {
     return [];
@@ -100,7 +96,7 @@ async function getChannelsForNotificationsFromTeamNumber(
   const channels: string[] = [];
 
   for (let i = 0; i < newRefs.length; i++) {
-    const guildData = (await newRefs[i].get()).data() as DatabaseGuild;
+    const guildData = await db.collection("guilds").doc<DatabaseGuild>(newRefs[i]).get();
 
     // if there for some reason is an issue with the database storage, we'll just continue to the next object
     if (!guildData) {

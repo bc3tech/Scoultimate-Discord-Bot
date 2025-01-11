@@ -30,7 +30,7 @@ const event: SlashCommand = {
     const key = interaction.options.get("key")?.value as string;
 
     await interaction.reply({
-      embeds: [generateLoadingEmbed({ type: "Event", key })],
+      embeds: [generateLoadingEmbed({ type: "Event", key })]
     });
 
     try {

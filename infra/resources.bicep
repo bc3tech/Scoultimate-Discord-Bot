@@ -4,7 +4,6 @@ param location string = resourceGroup().location
 @description('Tags that will be applied to all resources')
 param tags object = {}
 
-
 param scoultimateDiscordBotExists bool
 @secure()
 param scoultimateDiscordBotDefinition object
@@ -33,11 +32,14 @@ module containerRegistry 'br/public:avm/res/container-registry/registry:0.1.1' =
     acrAdminUserEnabled: true
     tags: tags
     publicNetworkAccess: 'Enabled'
-    roleAssignments:[
+    roleAssignments: [
       {
         principalId: scoultimateDiscordBotIdentity.outputs.principalId
         principalType: 'ServicePrincipal'
-        roleDefinitionIdOrName: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
+        roleDefinitionIdOrName: subscriptionResourceId(
+          'Microsoft.Authorization/roleDefinitions',
+          '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+        )
       }
     ]
   }
@@ -89,12 +91,13 @@ module scoultimateDiscordBot 'br/public:avm/res/app/container-app:0.8.0' = {
     scaleMinReplicas: 1
     scaleMaxReplicas: 10
     secrets: {
-      secureList:  union([
-      ],
-      map(scoultimateDiscordBotSecrets, secret => {
-        name: secret.secretRef
-        value: secret.value
-      }))
+      secureList: union(
+        [],
+        map(scoultimateDiscordBotSecrets, secret => {
+          name: secret.secretRef
+          value: secret.value
+        })
+      )
     }
     containers: [
       {
@@ -104,28 +107,30 @@ module scoultimateDiscordBot 'br/public:avm/res/app/container-app:0.8.0' = {
           cpu: json('0.5')
           memory: '1.0Gi'
         }
-        env: union([
-          {
-            name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-            value: monitoring.outputs.applicationInsightsConnectionString
-          }
-          {
-            name: 'AZURE_CLIENT_ID'
-            value: scoultimateDiscordBotIdentity.outputs.clientId
-          }
-        ],
-        scoultimateDiscordBotEnv,
-        map(scoultimateDiscordBotSecrets, secret => {
+        env: union(
+          [
+            {
+              name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+              value: monitoring.outputs.applicationInsightsConnectionString
+            }
+            {
+              name: 'AZURE_CLIENT_ID'
+              value: scoultimateDiscordBotIdentity.outputs.clientId
+            }
+          ],
+          scoultimateDiscordBotEnv,
+          map(scoultimateDiscordBotSecrets, secret => {
             name: secret.name
             secretRef: secret.secretRef
-        }))
+          })
+        )
       }
     ]
-    managedIdentities:{
+    managedIdentities: {
       systemAssigned: false
       userAssignedResourceIds: [scoultimateDiscordBotIdentity.outputs.resourceId]
     }
-    registries:[
+    registries: [
       {
         server: containerRegistry.outputs.loginServer
         identity: scoultimateDiscordBotIdentity.outputs.resourceId
@@ -134,6 +139,37 @@ module scoultimateDiscordBot 'br/public:avm/res/app/container-app:0.8.0' = {
     environmentResourceId: containerAppsEnvironment.outputs.resourceId
     location: location
     tags: union(tags, { 'azd-service-name': 'scoultimate-discord-bot' })
+  }
+}
+
+// Storage account
+module storageAccountMod 'br/public:avm/res/storage/storage-account:0.15.0' = {
+  name: 'storageAccount'
+  params: {
+    name: '${abbrs.storageStorageAccounts}${resourceToken}'
+    location: location
+    tags: tags
+    skuName: 'Standard_LRS'
+    kind: 'StorageV2'
+
+    tableServices: {
+      tables: [
+        {
+          name: 'botdata'
+        }
+      ]
+    }
+
+    roleAssignments: [
+      {
+        principalId: scoultimateDiscordBotIdentity.outputs.principalId
+        principalType: 'ServicePrincipal'
+        roleDefinitionIdOrName: subscriptionResourceId(
+          'Microsoft.Authorization/roleDefinitions',
+          '0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3'
+        ) // Storage Table Data Contributor
+      }
+    ]
   }
 }
 

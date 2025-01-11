@@ -1,7 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { getAboutEmbed } from "../../lib/embeds/AboutEmbed";
 import { SlashCommand } from "../../types";
-import { getTotalCommandsUsed } from "../../lib/firebase";
 
 const about: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -28,7 +27,7 @@ const about: SlashCommand = {
       },
       memory:
         Math.round((process.memoryUsage().heapUsed / 1024 / 1024) * 100) / 100,
-      commandsUsed: await getTotalCommandsUsed(),
+      commandsUsed: 0,
     });
 
     interaction.reply({ embeds: [embed] });

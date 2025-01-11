@@ -31,7 +31,7 @@ const recap = {
     const team = interaction.options.getNumber("team");
     const year = interaction.options.getNumber("year") || (await getMaxYear());
 
-    interaction.reply({
+    await interaction.reply({
       embeds: [
         generateLoadingEmbed({
           key: `${team} for ${year}`,

@@ -52,7 +52,7 @@ const ping: SlashCommand = {
     const channel = interaction.options.getChannel("channel") as TextChannel;
 
     if (!team && !event) {
-      interaction.reply({
+      await interaction.editReply({
         embeds: [
           generateErrorEmbed({
             error: "Missing team or event to enable notifications for",
@@ -65,7 +65,7 @@ const ping: SlashCommand = {
     }
 
     if (event && team) {
-      interaction.reply({
+      await interaction.editReply({
         embeds: [
           generateErrorEmbed({
             error:
@@ -78,10 +78,12 @@ const ping: SlashCommand = {
       return;
     }
 
+    await interaction.reply({ content: "Adding subscription...", });
+
     if (event) {
       // if its an event passed through
       if (!(await verifyEvent(event)) && event.toLowerCase() != "all") {
-        interaction.reply({
+        await interaction.editReply({
           embeds: [
             generateErrorEmbed({
               error:
@@ -99,7 +101,7 @@ const ping: SlashCommand = {
 
     if (team) {
       if (!(await verifyTeam(team))) {
-        interaction.reply({
+        await interaction.editReply({
           embeds: [
             generateErrorEmbed({
               error:
@@ -115,12 +117,9 @@ const ping: SlashCommand = {
       await subscribeToTeam(interaction.guildId!, channel.id, team);
     }
 
-    interaction.reply({
-      embeds: [
-        getSuccessfulSubscriptionEmbed(),
-        await getSubscriptionsEmbedFromGuildId(interaction.guild?.id!),
-      ],
-    });
+    const successfulEmbed = getSuccessfulSubscriptionEmbed();
+    const subscriptionsEmbed = await getSubscriptionsEmbedFromGuildId(interaction.guild?.id!);
+    await interaction.editReply({ content: null, embeds: [successfulEmbed, subscriptionsEmbed] });
   },
 
   async autocomplete(interaction: AutocompleteInteraction) {
