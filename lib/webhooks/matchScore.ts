@@ -11,32 +11,36 @@ import { generateMatchScoreEmbed } from "../embeds/notifications/GetMatchScoreEm
  * @param body - The TBAUpcomingMatchNotification object containing the webhook match data.
  */
 export async function processMatchScore(body: TBAMatchScoreNotification) {
-  const [channelSet, { alliances, comp_level, winning_alliance }] =
-    await Promise.all([
-      getChannelsForNotifications(body, body.message_data.match.event_key),
+  if (body.message_data.team_key === "frc2046" ||
+    body.message_data.match.alliances?.blue.team_keys.includes("frc2046") ||
+    body.message_data.match.alliances?.red.team_keys.includes("frc2046")) {
+    const [channelSet, { alliances, comp_level, winning_alliance }] =
+      await Promise.all([
+        getChannelsForNotifications(body, body.message_data.match.event_key),
 
-      // get published match data
-      get<APIMatchSimple>(`match/${body.message_data.match.key}`),
-    ]);
+        // get published match data
+        get<APIMatchSimple>(`match/${body.message_data.match.key}`),
+      ]);
 
-  const embed = generateMatchScoreEmbed({
-    event_name: body.message_data.event_name,
-    match_number: body.message_data.match.match_number,
-    set_number: body.message_data.match.set_number,
-    competition_level: comp_level,
-    alliances,
-    winning_alliance: winning_alliance || "",
-  });
+    const embed = generateMatchScoreEmbed({
+      event_name: body.message_data.event_name,
+      match_number: body.message_data.match.match_number,
+      set_number: body.message_data.match.set_number,
+      competition_level: comp_level,
+      alliances,
+      winning_alliance: winning_alliance || "",
+    });
 
-  const channels = channelSet.values();
+    const channels = channelSet.values();
 
-  for (const channel of channels) {
-    // undefined check
-    if (channel) {
-      const resolved = (await client.channels.fetch(channel)) as TextChannel;
-      resolved?.send({
-        embeds: [embed],
-      });
+    for (const channel of channels) {
+      // undefined check
+      if (channel) {
+        const resolved = (await client.channels.fetch(channel)) as TextChannel;
+        resolved?.send({
+          embeds: [embed],
+        });
+      }
     }
   }
 }

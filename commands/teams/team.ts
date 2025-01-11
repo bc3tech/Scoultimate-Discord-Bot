@@ -2,6 +2,7 @@ import {
   AutocompleteInteraction,
   ChatInputCommandInteraction,
   EmbedBuilder,
+  MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
 import { get, getMaxYear } from "../../lib/get";
@@ -27,21 +28,21 @@ const team: SlashCommand = {
         .setName("number")
         .setDescription("The team number of the FRC team you are requesting.")
         .setAutocomplete(true)
-        .setRequired(true)
     ),
   async execute(interaction: ChatInputCommandInteraction) {
-    const key = interaction.options.get("number")?.value as number;
+    const key = interaction.options.get("number")?.value as number || 2046;
 
     await interaction.reply({
       embeds: [generateLoadingEmbed({ key, type: "Team" })],
+      options: { flags: MessageFlags.Ephemeral }
     });
 
     try {
-      interaction.editReply({ embeds: [await retrieveEmbed(key)] });
+      await interaction.editReply({ embeds: [await retrieveEmbed(key)] });
     } catch (e) {
       console.error(e);
 
-      interaction.editReply({
+      await interaction.editReply({
         embeds: [
           generateErrorEmbed({
             error: `Error loading data. Please make sure ${key} is a valid team number.`,
@@ -56,7 +57,7 @@ const team: SlashCommand = {
     const focusedValue = interaction.options.getFocused();
 
     try {
-      interaction.respond(await TeamAutocomplete(focusedValue)).catch();
+      await interaction.respond(await TeamAutocomplete(focusedValue));
     } catch (e) {
       console.error(e);
     }

@@ -1,6 +1,7 @@
 import {
   AutocompleteInteraction,
   ChatInputCommandInteraction,
+  MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
 import { TeamAutocomplete } from "../../lib/autocomplete/teamAutocomplete";
@@ -9,7 +10,6 @@ import { getMaxYear } from "../../lib/get";
 import { generateLoadingEmbed } from "../../lib/embeds/LoadingEmbed";
 
 const recap = {
-  // TODO -- IMPLEMENT EXECUTE
   data: new SlashCommandBuilder()
     .setName("recap")
     .setDescription("Provides a recap of a team's season in a given year.")
@@ -18,7 +18,6 @@ const recap = {
         .setDescription("The team number of the FRC team you are requesting.")
         .setName("team")
         .setAutocomplete(true)
-        .setRequired(true)
     )
     .addNumberOption((option) =>
       option
@@ -28,7 +27,7 @@ const recap = {
     ),
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const team = interaction.options.getNumber("team");
+    const team = interaction.options.getNumber("team") || 2046;
     const year = interaction.options.getNumber("year") || (await getMaxYear());
 
     await interaction.reply({
@@ -37,21 +36,21 @@ const recap = {
           key: `${team} for ${year}`,
           type: "Season Recap",
         }),
-      ],
+      ], options: { flags: MessageFlags.Ephemeral },
     });
   },
 
   async autocomplete(interaction: AutocompleteInteraction) {
     const focusedValue = interaction.options.getFocused(true);
 
-    const team = interaction.options.getNumber("team") || 0;
+    const team = interaction.options.getNumber("team") || 2046;
     const year = interaction.options.getNumber("year") || undefined;
 
     try {
       if (focusedValue.name == "team") {
-        interaction.respond(await TeamAutocomplete(focusedValue.value));
+        await interaction.respond(await TeamAutocomplete(focusedValue.value));
       } else if (focusedValue.name == "year") {
-        interaction.respond(await TeamYearAutocomplete(team, year));
+        await interaction.respond(await TeamYearAutocomplete(team, year));
       }
     } catch (e) {
       console.error(e);
