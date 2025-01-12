@@ -146,6 +146,26 @@ module scoultimateDiscordBot 'br/public:avm/res/app/container-app:0.8.0' = {
   }
 }
 
+module vnet 'br/public:avm/res/network/virtual-network:0.5.2' = {
+  name: '${abbrs.networkVirtualNetworks}${resourceToken}'
+  params: {
+    name: '${abbrs.networkVirtualNetworks}${resourceToken}'
+    location: location
+    addressPrefixes: [
+      '10.0.0.0/16'
+    ]
+    subnets: [
+      {
+        name: 'storage'
+        addressPrefix: '10.0.0.0/24'
+        serviceEndpoints: [
+          'Microsoft.Storage'
+        ]
+      }
+    ]
+  }
+}
+
 // Storage account
 module storageAccountMod 'br/public:avm/res/storage/storage-account:0.15.0' = {
   name: 'storageAccount'
@@ -175,7 +195,12 @@ module storageAccountMod 'br/public:avm/res/storage/storage-account:0.15.0' = {
       }
     ]
 
-    publicNetworkAccess: 'Enabled'
+    privateEndpoints: [
+      {
+        service: 'table'
+        subnetResourceId: vnet.outputs.subnetResourceIds[0]
+      }
+    ]
   }
 }
 
