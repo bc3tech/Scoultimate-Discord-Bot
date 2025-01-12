@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from "discord.js";
 import { SlashCommand } from "../../types";
 import { getSubscriptionsEmbedFromGuildId } from "../../lib/embeds/notifications/GetSubscriptionsEmbed";
 
@@ -9,6 +9,7 @@ const ping: SlashCommand = {
   async execute(interaction: ChatInputCommandInteraction) {
     interaction.reply({
       embeds: [await getSubscriptionsEmbedFromGuildId(interaction.guild?.id!)],
+      options: { flags: MessageFlags.Ephemeral }
     });
   },
 };
