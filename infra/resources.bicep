@@ -73,12 +73,12 @@ module scoultimateDiscordBotFetchLatestImage './modules/fetch-container-image.bi
 }
 
 var scoultimateDiscordBotAppSettingsArray = filter(array(scoultimateDiscordBotDefinition.settings), i => i.name != '')
-var scoultimateDiscordBotSecrets = map(filter(scoultimateDiscordBotAppSettingsArray, i => i.?secret != null), i => {
+var scoultimateDiscordBotSecrets = map(filter(scoultimateDiscordBotAppSettingsArray, i => i.?secret == true), i => {
   name: i.name
   value: i.value
   secretRef: i.?secretRef ?? take(replace(replace(toLower(i.name), '_', '-'), '.', '-'), 32)
 })
-var scoultimateDiscordBotEnv = map(filter(scoultimateDiscordBotAppSettingsArray, i => i.?secret == null), i => {
+var scoultimateDiscordBotEnv = map(filter(scoultimateDiscordBotAppSettingsArray, i => i.?secret != true), i => {
   name: i.name
   value: i.value
 })

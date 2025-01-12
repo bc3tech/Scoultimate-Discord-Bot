@@ -36,38 +36,31 @@
             },
             {
               "name": "ENVIRONMENT",
-              "value": "PRODUCTION",
-              "secret": false
+              "value": "PRODUCTION"
             },
             {
               "name": "BOT_LOGO_URL",
-              "value": "https://firebasestorage.googleapis.com/v0/b/frc-scouting-epicnd.appspot.com/o/scoultimate-logo.png?alt=media&token=e57ad6be-e082-4bcc-8d01-19a634883293",
-              "secret": false
+              "value": "https://firebasestorage.googleapis.com/v0/b/frc-scouting-epicnd.appspot.com/o/scoultimate-logo.png?alt=media&token=e57ad6be-e082-4bcc-8d01-19a634883293"
             },
             {
               "name": "CLEAR",
-              "value": "1",
-              "secret": false
+              "value": "0"
             },
             {
               "name": "TBA_BASE_API_URL",
-              "value": "https://www.thebluealliance.com/api/v3",
-              "secret": false
+              "value": "https://www.thebluealliance.com/api/v3"
             },
             {
               "name": "STATBOTICS_BASE_API_URL",
-              "value": "https://api.statbotics.io/v2",
-              "secret": false
+              "value": "https://api.statbotics.io/v2"
             },
             {
               "name": "TBA_BASE_URL",
-              "value": "https://www.thebluealliance.com",
-              "secret": false
+              "value": "https://www.thebluealliance.com"
             },
             {
               "name": "BOT_VERSION",
-              "value": "${BOT_VERSION}",
-              "secret": false
+              "value": "${BOT_VERSION}"
             }
           ]
         }
